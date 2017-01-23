@@ -96,14 +96,24 @@ namespace SAPtic_Tank
                         string HEX_ADDRESS = tokens[1].Substring(0, 2);
 
                         if (Checker.check_hex(HEX_ADDRESS))
-                            try
+                        {
+                            if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS, 16)))
                             {
-                                ram.set_command(MAIN_ADDRESS++, "00", HEX_ADDRESS);
+                                try
+                                {
+                                    ram.set_command(MAIN_ADDRESS++, "00", HEX_ADDRESS);
+                                }
+                                catch (ArgumentException e)
+                                {
+                                    throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
+                                }
                             }
-                            catch(ArgumentException e)
+                            else
                             {
-                                throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
+                            Console.WriteLine(HEX_ADDRESS);
+                                throw new ArgumentException("Error : RAM is empty at address "+ HEX_ADDRESS +" in line " + LINE_NUM );
                             }
+                        }
                         else
                             throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
                                         + "Hint: Available AssemblerRAM Addresses are from 00H to 0FH only");
@@ -114,14 +124,21 @@ namespace SAPtic_Tank
 
                         if (Checker.check_hex(HEX_ADDRESS))
                         {
-                            try
+                            if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS, 16)))
                             {
-                                ram.set_command(MAIN_ADDRESS++, "00", HEX_ADDRESS);
+                                try
+                                {
+                                    ram.set_command(MAIN_ADDRESS++, "01", HEX_ADDRESS);
+                                }
+                                catch (ArgumentException e)
+                                {
+                                    throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
+                                }
                             }
-                            catch (ArgumentException e)
+                            else
                             {
-                                throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
-                            }
+                            throw new ArgumentException("Error : RAM is empty at address " + HEX_ADDRESS + " in line " + LINE_NUM);
+                        }
                         }
                         else
                             throw new ArgumentException("Error : Invalid Address in line " + (line + 1) + "\n"
@@ -133,13 +150,20 @@ namespace SAPtic_Tank
 
                         if (Checker.check_hex(HEX_ADDRESS))
                         {
-                            try
+                            if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS, 16)))
                             {
-                                ram.set_command(MAIN_ADDRESS++, "00", HEX_ADDRESS);
+                                try
+                                {
+                                    ram.set_command(MAIN_ADDRESS++, "02", HEX_ADDRESS);
+                                }
+                                catch (ArgumentException e)
+                                {
+                                    throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
+                                }
                             }
-                            catch (ArgumentException e)
+                            else
                             {
-                                throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
+                                throw new ArgumentException("Error : RAM is empty at address " + HEX_ADDRESS + " in line " + LINE_NUM);
                             }
                         }  
                         else
@@ -241,11 +265,11 @@ namespace SAPtic_Tank
             else
                 return true;
         }
+        
     }
 
     class AssemblerRAM
     {
-        //AssemblerRAM
         /// <summary>
         /// Class that represents 16x8 RAM
         /// </summary>
@@ -302,7 +326,7 @@ namespace SAPtic_Tank
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        private bool address_is_empty(int address)
+        public bool address_is_empty(int address)
         {
             if (memory[address, 1] == null)
                 return true;

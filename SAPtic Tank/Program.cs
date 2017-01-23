@@ -27,7 +27,8 @@ namespace SAPtic_Tank
                 print(path, output);
                 Console.Write("Assembling Complete");
                 Console.ReadLine();
-               
+
+                Emulator emu = new Emulator();
             }
             catch(ArgumentException e)
             {
