@@ -69,6 +69,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
     <Compile Include="Assembler.cs" />
     <Compile Include="AssemblerForm.cs">
       <SubType>Form</SubType>
@@ -77,6 +83,12 @@
       <DependentUpon>AssemblerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Emulator.cs" />
+    <Compile Include="Glossary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Glossary.Designer.cs">
+      <DependentUpon>Glossary.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainFrame.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -85,8 +97,20 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SAP1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SAP1.Designer.cs">
+      <DependentUpon>SAP1.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="About.resx">
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="AssemblerForm.resx">
       <DependentUpon>AssemblerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Glossary.resx">
+      <DependentUpon>Glossary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainFrame.resx">
       <DependentUpon>MainFrame.cs</DependentUpon>
@@ -101,6 +125,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SAP1.resx">
+      <DependentUpon>SAP1.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -117,6 +144,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MetroFramework.txt" />
+    <Content Include="Resources\state1.jpg" />
+    <Content Include="Resources\state2.jpg" />
+    <Content Include="Resources\state3.jpg" />
+    <Content Include="Resources\state4ADDSUB.jpg" />
+    <Content Include="Resources\state4HLT.jpg" />
+    <Content Include="Resources\state4LDA.jpg" />
+    <Content Include="Resources\state4OUT.jpg" />
+    <Content Include="Resources\state5ADDSUB.jpg" />
+    <Content Include="Resources\state5LDA.jpg" />
+    <Content Include="Resources\state6ADDSUB.jpg" />
     <None Include="Resources\wpid-wp-14240517395271.jpeg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -28,3 +28,6 @@ C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic_Tank.Assembler
 C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic_Tank.MainFrame.resources
 C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic_Tank.Properties.Resources.resources
 C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic Tank.csproj.GenerateResource.Cache
+C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic_Tank.About.resources
+C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic_Tank.Glossary.resources
+C:\Users\DELL PC\Desktop\SAPtic Tank\SAPtic Tank\obj\Debug\SAPtic_Tank.SAP1.resources
