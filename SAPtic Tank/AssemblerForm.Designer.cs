@@ -1,6 +1,6 @@
 ﻿namespace SAPtic_Tank
 {
-    partial class MainFrame
+    partial class AssemblerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,22 +28,35 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.backButton = new MetroFramework.Controls.MetroButton();
             this.SuspendLayout();
             // 
-            // MainFrame
+            // backButton
+            // 
+            this.backButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.backButton.Location = new System.Drawing.Point(8, 29);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(75, 23);
+            this.backButton.TabIndex = 0;
+            this.backButton.Theme = MetroFramework.MetroThemeStyle.Light;
+            // 
+            // AssemblerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackgroundImage = global::SAPtic_Tank.Properties.Resources.wpid_wp_14240517395271;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.ClientSize = new System.Drawing.Size(542, 336);
-            this.Name = "MainFrame";
-            this.Text = "MainFrame";
-            this.Load += new System.EventHandler(this.MainFrame_Load);
+            this.ClientSize = new System.Drawing.Size(426, 620);
+            this.Controls.Add(this.backButton);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "AssemblerForm";
+            this.Style = MetroFramework.MetroColorStyle.Silver;
+            this.Load += new System.EventHandler(this.AssemblerForm_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private MetroFramework.Controls.MetroButton backButton;
     }
 }
