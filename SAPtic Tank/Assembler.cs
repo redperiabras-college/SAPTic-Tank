@@ -46,25 +46,26 @@ namespace SAPtic_Tank
                                 
                     if (tokens[2].Equals("MAIN"))
                         {
-                            string HEX_ADDRESS = tokens[1].Substring(0, 2);
-
+                            string HEX_ADDRESS = tokens[1];
                             if (Checker.check_hex(HEX_ADDRESS))
                             {
-                                MAIN_ADDRESS = Convert.ToInt32(HEX_ADDRESS, 2);
+                                MAIN_ADDRESS = Convert.ToInt32(HEX_ADDRESS.Substring(0,2), 2);
                             }
                             else
                             {
+                            Console.WriteLine(HEX_ADDRESS);
                                 throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
-                                    + "Hint: Available AssemblerRAM Addresses are from 00H to 0FH only");
+                                    + "Hint: Available RAM Addresses are from 00H to 0FH only");
                             }
                         }
                         else
                         {
-                            string ADDRESS = tokens[1].Substring(0, 2);
+                            string ADDRESS = tokens[1];
                             string DATA = tokens[2].Substring(0, 2);
 
                             if (Checker.check_hex(ADDRESS))
                             {
+                                string TRIMMED_ADDRESS = ADDRESS.Substring(0, 2);
                                 if (Checker.check_data(DATA))
                                     try
                                     {
@@ -82,8 +83,9 @@ namespace SAPtic_Tank
                             }
                             else
                             {
+                            Console.WriteLine(ADDRESS);
                                 throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
-                                        + "Hint: Available AssemblerRAM Addresses are from 00H to 0FH only");
+                                        + "Hint: Available RAM Addresses are from 00H to 0FH only");
                             }
                         }
                     }
@@ -215,7 +217,7 @@ namespace SAPtic_Tank
     class Checker
     {
         private static string INVALID_HEX_EXP = @"[^\dabcdef]";
-        private static string HEX_PADDING_EXP = @"^(0x)H?0*H";
+        private static string HEX_PADDING_EXP = @"h,";
 
         /// <summary>
         /// Checks if given opcode and address is valid
@@ -225,7 +227,7 @@ namespace SAPtic_Tank
         public static bool check_hex(string hex)
         {
             hex = Regex.Replace(hex.Trim().ToLower(), HEX_PADDING_EXP, "");
-
+            Console.WriteLine(hex);
             if (Regex.IsMatch(hex, INVALID_HEX_EXP))
                 return false;
             else
@@ -298,7 +300,16 @@ namespace SAPtic_Tank
         /// <returns></returns>
         private string hexbin(string hex)
         {
-            return Convert.ToString(Convert.ToInt32(hex, 16), 2).PadLeft(4, '0');
+            string INVALID_HEX_EXP = @"[^\dabcdef]";
+            string HEX_PADDING_EXP = @"h,";
+
+            hex = Regex.Replace(hex.Trim().ToLower(), HEX_PADDING_EXP, "");
+            Console.WriteLine(hex);
+
+            if (Regex.IsMatch(hex, INVALID_HEX_EXP))
+                throw new ArgumentException("Invalid Hex Format");
+            else
+                return Convert.ToString(Convert.ToInt32(hex, 16), 2).PadLeft(4, '0');
         }
 
         /// <summary>
@@ -308,7 +319,17 @@ namespace SAPtic_Tank
         /// <returns></returns>
         private int hexdec(string hex)
         {
-            return Convert.ToInt32(hex, 16);
+            string INVALID_HEX_EXP = @"[^\dabcdef]";
+            string HEX_PADDING_EXP = @"h,";
+
+            hex = Regex.Replace(hex.Trim().ToLower(), HEX_PADDING_EXP, "");
+            Console.WriteLine(hex);
+
+            if (Regex.IsMatch(hex, INVALID_HEX_EXP))
+                throw new ArgumentException("Invalid Hex Format");
+            else
+                return  int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+
         }
 
         /// <summary>

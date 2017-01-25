@@ -15,29 +15,29 @@ namespace SAPtic_Tank
         [STAThread]
         static void Main()
         {
-            try
-            {
-                string[] file = read();
-                string path = file[0];
-                string contents = file[1];
+           // try
+           // {
+           //     string[] file = read();
+           //     string path = file[0];
+           //     string contents = file[1];
 
-                Assembler.assemble(contents);
-                string output = Assembler.getRAM();
+          //      Assembler.assemble(contents);
+            //    string output = Assembler.getRAM();
 
-                print(path, output);
-                Console.Write("Assembling Complete");
-                Console.ReadLine();
+//                print(path, output);
+   //             Console.Write("Assembling Complete");
+     ////           Console.ReadLine();
 
-                Emulator emu = new Emulator();
-            }
-            catch(ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
-                Console.ReadKey();
-            }
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Main());
+                //Emulator emu = new Emulator();
+         //   }
+           // catch(ArgumentException e)
+           // {
+           //     Console.WriteLine(e.Message);
+           //     Console.ReadKey();
+           // }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Main());
         }
 
         /// <summary>
