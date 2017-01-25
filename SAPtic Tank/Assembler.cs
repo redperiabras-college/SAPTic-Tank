@@ -18,42 +18,48 @@ namespace SAPtic_Tank
         /// <summary>
         /// AssemblerRAM Class where command and data are being stored
         /// </summary>
-        private static AssemblerRAM ram = new AssemblerRAM();
+        private AssemblerRAM ram;
 
+        public Assembler()
+        {
+            ram = new AssemblerRAM();
+        }
+        
         /// <summary>
         /// Function that processes tokens and stores command and data in the ram
         /// </summary>
-        public static void assemble(string data)
+        public string assemble(string data)
         {
             string[] input = data.Split('\n');
             int MAIN_ADDRESS = 0;
+            bool MAIN_EXISTS = false;
 
             for(int line = 0; line < input.Length; line++)
             {
+
                 string[] tokens = input[line].Split();
 
                 int LINE_NUM = line + 1;
                 string COMMAND = tokens[0];
 
+                if(tokens.Length > 3)
+                     if (Checker.check_unexpected_token(tokens[3]))
+                          throw new ArgumentException("Error: Unexpected " + tokens[3] + " in line " + LINE_NUM);
+                
 
                 if (COMMAND.Equals("ORG"))
-                {
-                    //check for unexpected tokens
-                    if (Checker.check_unexpected_token(tokens[3]))
-                    {
-                         throw new ArgumentException("Error: Unexpected " + tokens[3] + " in line " + LINE_NUM);
-                    }
-                                
-                    if (tokens[2].Equals("MAIN"))
+                {                   
+                    
+                        if (tokens[2].Equals("MAIN"))
                         {
                             string HEX_ADDRESS = tokens[1];
-                            if (Checker.check_hex(HEX_ADDRESS))
+
+                            if (Checker.check_hex(HEX_ADDRESS,@"h,"))
                             {
                                 MAIN_ADDRESS = Convert.ToInt32(HEX_ADDRESS.Substring(0,2), 2);
                             }
                             else
                             {
-                            Console.WriteLine(HEX_ADDRESS);
                                 throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
                                     + "Hint: Available RAM Addresses are from 00H to 0FH only");
                             }
@@ -61,44 +67,56 @@ namespace SAPtic_Tank
                         else
                         {
                             string ADDRESS = tokens[1];
-                            string DATA = tokens[2].Substring(0, 2);
+                            string DATA = tokens[2];
 
-                            if (Checker.check_hex(ADDRESS))
+                            if (Checker.check_hex(ADDRESS,@"h,"))
                             {
-                                string TRIMMED_ADDRESS = ADDRESS.Substring(0, 2);
                                 if (Checker.check_data(DATA))
+                                {
                                     try
                                     {
                                         ram.set_data(ADDRESS, DATA);
                                     }
-                                    catch(ArgumentException e)
+                                    catch (ArgumentException e)
                                     {
                                         throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
                                     }
+                                }
+                                
+                                   
                                 else
                                 {
                                     throw new ArgumentException("Error : Invalid Data in line " + LINE_NUM + "\n"
-                                        + "Hint: SAP1 can only accept inputs in range of 0 to 127");
+                                        + "Hint: SAP1 can only accept inputs in range of 00H to 7FH");
                                 }
                             }
                             else
                             {
-                            Console.WriteLine(ADDRESS);
                                 throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
-                                        + "Hint: Available RAM Addresses are from 00H to 0FH only");
+                                        + "Hint: Available RAM Addresses are from 00H to 0FH only.\n"
+                                        + "Hint: Be mindful of the the correct syntax.");
                             }
                         }
                     }
                     else if (COMMAND.Equals("MAIN:"))
                     {
-                        continue;
+                        if (MAIN_EXISTS)
+                            throw new ArgumentException("Error : MAIN cannot be declared two or more times");
+                        else
+                        {
+                            MAIN_EXISTS = true;
+                            continue;
+                        }
+                            
                     }
                     else if (COMMAND.Equals("LDA"))
                     {
-                        string HEX_ADDRESS = tokens[1].Substring(0, 2);
+                        string HEX_ADDRESS = tokens[1];
 
-                        if (Checker.check_hex(HEX_ADDRESS))
+                        if (Checker.check_hex(HEX_ADDRESS, @"h"))
                         {
+                            HEX_ADDRESS = HEX_ADDRESS.Substring(0, 2);
+
                             if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS, 16)))
                             {
                                 try
@@ -112,21 +130,21 @@ namespace SAPtic_Tank
                             }
                             else
                             {
-                            Console.WriteLine(HEX_ADDRESS);
-                                throw new ArgumentException("Error : RAM is empty at address "+ HEX_ADDRESS +" in line " + LINE_NUM );
+                                throw new ArgumentException("Error : RAM is empty at address "+ HEX_ADDRESS +"H in line " + LINE_NUM );
                             }
                         }
                         else
                             throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
-                                        + "Hint: Available AssemblerRAM Addresses are from 00H to 0FH only");
+                                        + "Hint: Available RAM Addresses are from 00H to 0FH only");
                     }
                     else if (COMMAND.Equals("ADD"))
                     {
-                        string HEX_ADDRESS = tokens[1].Substring(0, 2);
+                        string HEX_ADDRESS = tokens[1];
 
-                        if (Checker.check_hex(HEX_ADDRESS))
+                        if (Checker.check_hex(HEX_ADDRESS, @"h"))
                         {
-                            if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS, 16)))
+                            HEX_ADDRESS = HEX_ADDRESS.Substring(0, 2);
+                            if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS.Substring(0, 2), 16)))
                             {
                                 try
                                 {
@@ -139,19 +157,20 @@ namespace SAPtic_Tank
                             }
                             else
                             {
-                            throw new ArgumentException("Error : RAM is empty at address " + HEX_ADDRESS + " in line " + LINE_NUM);
+                            throw new ArgumentException("Error : RAM is empty at address " + HEX_ADDRESS + "H in line " + LINE_NUM);
                         }
                         }
                         else
                             throw new ArgumentException("Error : Invalid Address in line " + (line + 1) + "\n"
-                                        + "Hint: Available AssemblerRAM Addresses are from 00H to 0FH only");
+                                        + "Hint: Available RAM Addresses are from 00H to 0FH only");
                     }
                     else if (COMMAND.Equals("SUB"))
                     {
-                        string HEX_ADDRESS = tokens[1].Substring(0, 2);
+                        string HEX_ADDRESS = tokens[1];
 
-                        if (Checker.check_hex(HEX_ADDRESS))
+                        if (Checker.check_hex(HEX_ADDRESS, @"h"))
                         {
+                            HEX_ADDRESS = HEX_ADDRESS.Substring(0, 2);
                             if (!ram.address_is_empty(Convert.ToInt32(HEX_ADDRESS, 16)))
                             {
                                 try
@@ -160,7 +179,7 @@ namespace SAPtic_Tank
                                 }
                                 catch (ArgumentException e)
                                 {
-                                    throw new ArgumentException("Error : " + e.Message + " in line " + LINE_NUM);
+                                    throw new ArgumentException("Error : " + e.Message + "H in line " + LINE_NUM);
                                 }
                             }
                             else
@@ -170,7 +189,7 @@ namespace SAPtic_Tank
                         }  
                         else
                             throw new ArgumentException("Error : Invalid Address in line " + LINE_NUM + "\n"
-                                        + "Hint: Available AssemblerRAM Addresses are from 00H to 0FH only");
+                                        + "Hint: Available RAM Addresses are from 00H to 0FH only");
                     }
                     else if (COMMAND.Equals("OUT"))
                     {
@@ -203,13 +222,13 @@ namespace SAPtic_Tank
                         throw new ArgumentException("Error : Invalid " + COMMAND + " command in line " + LINE_NUM);
                     }
                 }
-            }
 
-        public static string getRAM()
-        {
             return ram.get();
         }
+        
     }
+
+
 
     /// <summary>
     /// Class to check every given codes to assemble
@@ -217,19 +236,21 @@ namespace SAPtic_Tank
     class Checker
     {
         private static string INVALID_HEX_EXP = @"[^\dabcdef]";
-        private static string HEX_PADDING_EXP = @"h,";
+        
 
         /// <summary>
         /// Checks if given opcode and address is valid
         /// </summary>
         /// <param name="hex"></param>
         /// <returns>true if valid </returns>
-        public static bool check_hex(string hex)
+        public static bool check_hex(string hex, string pad)
         {
-            hex = Regex.Replace(hex.Trim().ToLower(), HEX_PADDING_EXP, "");
-            Console.WriteLine(hex);
+       
+            hex = Regex.Replace(hex.Trim().ToLower(), pad, "");
+
             if (Regex.IsMatch(hex, INVALID_HEX_EXP))
                 return false;
+
             else
             {
                 int INT_OPCODE = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
@@ -243,6 +264,8 @@ namespace SAPtic_Tank
 
         public static bool check_data(string hex_data)
         {
+            string HEX_PADDING_EXP = @"h";
+
             hex_data = Regex.Replace(hex_data.Trim().ToLower(), HEX_PADDING_EXP, "");
 
             if (Regex.IsMatch(hex_data, INVALID_HEX_EXP))
@@ -287,6 +310,11 @@ namespace SAPtic_Tank
         /// </summary>
         public AssemblerRAM()
         {
+            //clears ram
+            for (int i = 0; i < RAM_SIZE; i++)
+                for (int j = 0; j < RAM_CONTENT; j++)
+                    memory[i, j] = null;
+
             for (int i = 0; i < RAM_SIZE; i++)
             {
                 memory[i, 0] = "A" + Convert.ToString(i, 2).PadLeft(4, '0');
@@ -301,11 +329,11 @@ namespace SAPtic_Tank
         private string hexbin(string hex)
         {
             string INVALID_HEX_EXP = @"[^\dabcdef]";
-            string HEX_PADDING_EXP = @"h,";
+            string HEX_PADDING_EXP = @"h,|h";
 
             hex = Regex.Replace(hex.Trim().ToLower(), HEX_PADDING_EXP, "");
-            Console.WriteLine(hex);
 
+            Console.WriteLine(hex);
             if (Regex.IsMatch(hex, INVALID_HEX_EXP))
                 throw new ArgumentException("Invalid Hex Format");
             else
@@ -320,10 +348,9 @@ namespace SAPtic_Tank
         private int hexdec(string hex)
         {
             string INVALID_HEX_EXP = @"[^\dabcdef]";
-            string HEX_PADDING_EXP = @"h,";
+            string HEX_PADDING_EXP = @"h,|h";
 
             hex = Regex.Replace(hex.Trim().ToLower(), HEX_PADDING_EXP, "");
-            Console.WriteLine(hex);
 
             if (Regex.IsMatch(hex, INVALID_HEX_EXP))
                 throw new ArgumentException("Invalid Hex Format");
@@ -397,7 +424,7 @@ namespace SAPtic_Tank
                 memory[DEC_ADDRESS, 1] = BINARY_DATA.PadLeft(8, '0');
             }
             else
-                throw new System.ArgumentException("Requested AssemblerRAM Address " + BINARY_ADDRESS + " is not available");
+                throw new System.ArgumentException("Requested RAM Address " + hex_address + "H is not available");
 
         }
 

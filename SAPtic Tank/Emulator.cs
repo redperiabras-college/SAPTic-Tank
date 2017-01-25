@@ -126,7 +126,7 @@ namespace SAPtic_Tank
 
                 try
                 {
-                    BIN_DATA = File.ReadAllText(file);
+                    BIN_DATA = System.IO.File.ReadAllText(file);
                 }
                 catch (Exception e)
                 {
