@@ -117,8 +117,45 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="wpid-wp-14240517395271" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\wpid-wp-14240517395271.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="panel1.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        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
+        axqnQlpsaNR/kxlXvzY6askAAAAASUVORK5CYII=
+</value>
   </data>
 </root>
