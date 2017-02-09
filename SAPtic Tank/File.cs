@@ -13,6 +13,8 @@ namespace SAPtic_Tank
         public string assembler_currAddress;
         public string bin_address;
 
+        public string emulator_currAddress;
+
         public File()
         {
 
@@ -32,7 +34,7 @@ namespace SAPtic_Tank
             {
                 string file = open_file.FileName;
                 assembler_currAddress = file;
-                bin_address  =  @file.Substring(0, file.Length - 5) + ".bin";
+                bin_address = @file.Substring(0, file.Length - 5) + ".bin";
 
                 try
                 {
@@ -57,7 +59,8 @@ namespace SAPtic_Tank
         {
             try
             {
-                if (content.Equals("")){
+                if (content.Equals(""))
+                {
                     return "File is empty";
                 }
                 else
@@ -74,7 +77,7 @@ namespace SAPtic_Tank
                         sw.Close();
                     }
                 }
-                
+
                 return "File Successfully Saved";
             }
             catch (Exception e)
@@ -140,7 +143,7 @@ namespace SAPtic_Tank
                     sw.Flush();
                     sw.Close();
                 }
-                
+
                 return "File Successfully Saved";
             }
             catch (Exception e)
@@ -150,6 +153,31 @@ namespace SAPtic_Tank
 
         }
 
+        public string emulatorReader()
+        {
+            string data = "";
+            OpenFileDialog open_file = new OpenFileDialog();
+            open_file.Title = "SAPtic Tank - Open File";
+            open_file.Filter = "Bin Files (*.bin)|*.bin";
 
+            DialogResult result = open_file.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                string file = open_file.FileName;
+
+                try
+                {
+                    emulator_currAddress = file;
+                    data = System.IO.File.ReadAllText(file);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    MessageBox.Show("Cannot open File 😐");
+                }
+            }
+
+            return data;
+        }
     }
 }

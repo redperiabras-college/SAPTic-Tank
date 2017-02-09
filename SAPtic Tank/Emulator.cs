@@ -13,46 +13,53 @@ namespace SAPtic_Tank
 {
     class Emulator
     {
+        public string mchnCode;
+        public string assmblyCode;
+
         Command LDA = new Command();
         Command ADD = new Command();
         Command SUB = new Command();
         Command OUT = new Command();
         Command HLT = new Command();
 
-        //program counter
+        private int jogTimeSlot = 0;
+        string UPPER_NIBBLE ="";
+        string LOWER_NIBBLE = "";
+
+        //program counter - binary
         static int COUNTER = 0;
-        //MAR
+        //MAR - binary
         static int MAR = 0;
         //ROM
         static string[] ROM = new string[16];
         static string ROM_DATA = "";
-        //Instruction Register
+        //Instruction Register - Mnemonics
         static string IR = "";
-        //Accumulator
+        //Accumulator - Hex
         static int ACC = 0;
         //Add/Subtract Register
         static int AS;
-        //BRegister
+        //BRegister - Hex
         static int BREG = 0;
-        //Output Register
-        static string OUT1 = "";
+        //Output Register - Hex
+        static int OUT1;
 
-        //command
+        //command - 12 bit binary
         static int CONTROLLER = 0;
 
-        public Emulator() {
+        public Emulator(string input) {
             Object t1LDA = Properties.Resources.ResourceManager.GetObject("state1");
             Object t2LDA = Properties.Resources.ResourceManager.GetObject("state2");
             Object t3LDA = Properties.Resources.ResourceManager.GetObject("state3");
             Object t4LDA = Properties.Resources.ResourceManager.GetObject("state4LDA");
             Object t5LDA = Properties.Resources.ResourceManager.GetObject("state5LDA");
             Object t6LDA = Properties.Resources.ResourceManager.GetObject("state4HLT");
-            LDA.t1.image = t1LDA as Image;
-            LDA.t2.image = t2LDA as Image;
-            LDA.t3.image = t3LDA as Image;
-            LDA.t4.image = t4LDA as Image;
-            LDA.t5.image = t5LDA as Image;
-            LDA.t6.image = t6LDA as Image;
+            LDA.t1 = t1LDA as Image;
+            LDA.t2 = t2LDA as Image;
+            LDA.t3 = t3LDA as Image;
+            LDA.t4 = t4LDA as Image;
+            LDA.t5 = t5LDA as Image;
+            LDA.t6 = t6LDA as Image;
 
             Object t1ADD = Properties.Resources.ResourceManager.GetObject("state1");
             Object t2ADD = Properties.Resources.ResourceManager.GetObject("state2");
@@ -60,12 +67,12 @@ namespace SAPtic_Tank
             Object t4ADD = Properties.Resources.ResourceManager.GetObject("state4ADDSUB");
             Object t5ADD = Properties.Resources.ResourceManager.GetObject("state5ADDSUB");
             Object t6ADD = Properties.Resources.ResourceManager.GetObject("state4HLT");
-            ADD.t1.image = t1ADD as Image;
-            ADD.t2.image = t2ADD as Image;
-            ADD.t3.image = t3ADD as Image;
-            ADD.t4.image = t4ADD as Image;
-            ADD.t5.image = t5ADD as Image;
-            ADD.t6.image = t6ADD as Image;
+            ADD.t1 = t1ADD as Image;
+            ADD.t2 = t2ADD as Image;
+            ADD.t3 = t3ADD as Image;
+            ADD.t4 = t4ADD as Image;
+            ADD.t5 = t5ADD as Image;
+            ADD.t6 = t6ADD as Image;
 
             Object t1SUB = Properties.Resources.ResourceManager.GetObject("state1");
             Object t2SUB = Properties.Resources.ResourceManager.GetObject("state2");
@@ -73,12 +80,12 @@ namespace SAPtic_Tank
             Object t4SUB = Properties.Resources.ResourceManager.GetObject("state4ADDSUB");
             Object t5SUB = Properties.Resources.ResourceManager.GetObject("state5ADDSUB");
             Object t6SUB = Properties.Resources.ResourceManager.GetObject("state4HLT");
-            SUB.t1.image = t1SUB as Image;
-            SUB.t2.image = t2SUB as Image;
-            SUB.t3.image = t3SUB as Image;
-            SUB.t4.image = t4SUB as Image;
-            SUB.t5.image = t5SUB as Image;
-            SUB.t6.image = t6SUB as Image;
+            SUB.t1 = t1SUB as Image;
+            SUB.t2 = t2SUB as Image;
+            SUB.t3 = t3SUB as Image;
+            SUB.t4 = t4SUB as Image;
+            SUB.t5 = t5SUB as Image;
+            SUB.t6 = t6SUB as Image;
 
             Object t1OUT = Properties.Resources.ResourceManager.GetObject("state1");
             Object t2OUT = Properties.Resources.ResourceManager.GetObject("state2");
@@ -86,12 +93,12 @@ namespace SAPtic_Tank
             Object t4OUT = Properties.Resources.ResourceManager.GetObject("state4OUT");
             Object t5OUT = Properties.Resources.ResourceManager.GetObject("state5ADDSUB");
             Object t6OUT = Properties.Resources.ResourceManager.GetObject("state4HLT");
-            OUT.t1.image = t1OUT as Image;
-            OUT.t2.image = t2OUT as Image;
-            OUT.t3.image = t3OUT as Image;
-            OUT.t4.image = t4OUT as Image;
-            OUT.t5.image = t5OUT as Image;
-            OUT.t6.image = t6OUT as Image;
+            OUT.t1 = t1OUT as Image;
+            OUT.t2 = t2OUT as Image;
+            OUT.t3 = t3OUT as Image;
+            OUT.t4 = t4OUT as Image;
+            OUT.t5 = t5OUT as Image;
+            OUT.t6 = t6OUT as Image;
 
             Object t1HLT = Properties.Resources.ResourceManager.GetObject("state1");
             Object t2HLT = Properties.Resources.ResourceManager.GetObject("state2");
@@ -99,131 +106,398 @@ namespace SAPtic_Tank
             Object t4HLT = Properties.Resources.ResourceManager.GetObject("state4HLT");
             Object t5HLT = Properties.Resources.ResourceManager.GetObject("state5ADDSUB");
             Object t6HLT = Properties.Resources.ResourceManager.GetObject("state4HLT");
-            HLT.t1.image = t1HLT as Image;
-            HLT.t2.image = t2HLT as Image;
-            HLT.t3.image = t3HLT as Image;
-            HLT.t4.image = t4HLT as Image;
-            HLT.t5.image = t5HLT as Image;
-            HLT.t6.image = t6HLT as Image;
+            HLT.t1 = t1HLT as Image;
+            HLT.t2 = t2HLT as Image;
+            HLT.t3 = t3HLT as Image;
+            HLT.t4 = t4HLT as Image;
+            HLT.t5 = t5HLT as Image;
+            HLT.t6 = t6HLT as Image;
 
+            ROM = input.Split('\n');
+            
+        }
 
-            ROM = read().Split();
+        public void generateCodes()
+        {
+            // generating machine code
+            bool loopCtrl = false;
+            bool halted = false;
+            for (int x = 0; x < ROM.Length - 1; x++)
+            {
+                string normalizedData = ROM[x].Substring(5, 8);
+                string line = x.ToString("X");
 
+                if (loopCtrl)
+                    if (!normalizedData.Equals("11111111"))
+                        loopCtrl = false;
+                    else
+                        mchnCode += line.PadLeft(2, '0') + "H ---\n";
+                else if (normalizedData.Equals("11111111") && halted)
+                {
+                    mchnCode += line.PadLeft(2, '0') + "H ---\n";
+                }
+                else if (normalizedData.Equals("11111111"))
+                {
+                    loopCtrl = true;
+                    halted = true;
+                    string code = Convert.ToInt32(normalizedData.Substring(0, 4), 2).ToString("X");
+                    mchnCode += line.PadLeft(2, '0') + "H " + code + "xH\n";
+                }
+                else if (normalizedData.Equals("11101111"))
+                {
+                    string code = Convert.ToInt32(normalizedData.Substring(0, 4), 2).ToString("X");
+                    mchnCode += line.PadLeft(2, '0') + "H " + code + "xH\n";
+                }
+                else
+                {
+                    string code = Convert.ToInt32(normalizedData, 2).ToString("X");
+                    mchnCode += line.PadLeft(2, '0') + "H " + code.PadLeft(2, '0') + "H\n";
+                }
+            }
+
+            //generating assembly code
+
+            string orgCommand = "";
+            string orgMain = "";
+            for (int x = 0; x < ROM.Length-1; x++)
+            {
+                string upper_bin = ROM[x].Substring(5, 4);
+                string lower_bin = ROM[x].Substring(9, 4);
+
+                int refAddress = Convert.ToInt32(lower_bin, 2);
+                string data_bin = ROM[refAddress].Substring(5, 8);
+
+                bool outerCtrl = false;
+
+                switch (upper_bin)
+                {
+                    case "0000":
+                        {
+                            orgMain += "ORG " + x.ToString("X").PadLeft(2, '0') + "H, " + "MAIN\n\nMAIN:\n";
+                            assmblyCode += "LDA " + refAddress.ToString("X").PadLeft(2, '0') + "H\n";
+                            orgCommand += "ORG " + Convert.ToInt32(lower_bin, 2).ToString("X").PadLeft(2, '0') + "H, "+ Convert.ToInt32(data_bin, 2).ToString("X").PadLeft(2, '0') + "H \n";
+                            break;
+                        }
+                    case "0001":
+                        {
+                            assmblyCode += "ADD " + refAddress.ToString("X").PadLeft(2, '0') + "H\n";
+                            orgCommand += "ORG " + Convert.ToInt32(lower_bin, 2).ToString("X").PadLeft(2, '0') + "H, " + Convert.ToInt32(data_bin, 2).ToString("X").PadLeft(2, '0') + "H \n";
+                            break;
+                        }
+                    case "0010":
+                        {
+                            assmblyCode += "SUB " + refAddress.ToString("X").PadLeft(2, '0') + "H\n";
+                            orgCommand += "ORG " + Convert.ToInt32(lower_bin, 2).ToString("X").PadLeft(2, '0') + "H, " + Convert.ToInt32(data_bin, 2).ToString("X").PadLeft(2, '0') + "H\n";
+                            break;
+                        }
+                    case "1110":
+                        {
+                            assmblyCode += "OUT\n";
+                            break;
+                        }
+                    case "1111":
+                        {
+                            outerCtrl = true;
+                            assmblyCode += "HLT";
+                            assmblyCode = orgCommand + orgMain + assmblyCode;
+                            break;
+                        }
+                        
+                }
+
+                if (outerCtrl)
+                    break;
+            }
+        }
+
+        public async void continous(MainFrame frame, int delay)
+        {
             while (true)
             {
                 //t1
                 MAR = COUNTER;
+                frame.update(1, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "010111100011", ADD.t1);
+                await Task.Delay(delay);
 
                 //t2
                 COUNTER++;
+                frame.update(2, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "101111100011", ADD.t2);
+                await Task.Delay(delay);
 
                 //t3
                 ROM_DATA = ROM[MAR].Substring(5, 8);
                 IR = ROM_DATA;
+                frame.update(3, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001001100011", ADD.t3);
+                await Task.Delay(delay);
 
                 //t4
                 string UPPER_NIBBLE = IR.Substring(0, 4);
                 string LOWER_NIBBLE = IR.Substring(4, 4);
-
                 CONTROLLER = Convert.ToInt32(UPPER_NIBBLE, 2);
+
                 MAR = Convert.ToInt32(LOWER_NIBBLE, 2);
 
                 if (CONTROLLER == 0)
                 {
                     //LDA
 
+                    //t4
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "000110100011", LDA.t4);
+                    await Task.Delay(delay);
+
                     //t5
                     ROM_DATA = ROM[MAR].Substring(5, 8);
                     ACC = Convert.ToInt32(ROM_DATA, 2);
-                    
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011000011", LDA.t5);
+                    await Task.Delay(delay);
+
+                    //t6
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011000011", LDA.t6);
+                    await Task.Delay(delay);
                 }
-                else if(CONTROLLER == 1)
+                else if (CONTROLLER == 1)
                 {
                     //ADD
+
+                    //t4
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "000110100011", ADD.t4);
+                    await Task.Delay(delay);
 
                     //t5
                     ROM_DATA = ROM[MAR].Substring(5, 8);
                     BREG = Convert.ToInt32(ROM[MAR].Substring(5, 8), 2);
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011100001", ADD.t5);
+                    await Task.Delay(delay);
 
                     // t6
                     AS = ACC + BREG;
                     ACC = AS;
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111000111", ADD.t6);
+                    await Task.Delay(delay);
                 }
                 else if (CONTROLLER == 2)
                 {
                     //SUBTRACT
 
+                    //t4
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "000110100011", SUB.t4);
+                    await Task.Delay(delay);
+
                     //t5
                     ROM_DATA = ROM[MAR].Substring(5, 8);
                     BREG = Convert.ToInt32(ROM[MAR].Substring(5, 8), 2);
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011100001", SUB.t5);
+                    await Task.Delay(delay);
 
                     //t6
                     AS = ACC - BREG;
                     ACC = AS;
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111001111", SUB.t6);
+                    await Task.Delay(delay);
                 }
-                else if(CONTROLLER == 14)
+                else if (CONTROLLER == 14)
                 {
                     //OUT
+                    OUT1 = ACC;
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111110010", OUT.t4);
+                    await Task.Delay(delay);
 
                     //t5
-                    OUT1 += AS;
-                    Console.WriteLine(OUT1);
-                    Console.ReadKey();
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111110010", OUT.t5);
+                    await Task.Delay(delay);
+
+                    //t6
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111110010", OUT.t6);
+                    await Task.Delay(delay);
                 }
-                else if(CONTROLLER == 15)
+                else if (CONTROLLER == 15)
                 {
                     //HLT
 
                     //t4
-                    break;
-                }
-                else
-                {
-                    OUT1 += ACC;
-                    Console.WriteLine(OUT1);
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111100011", HLT.t4);
+                    await Task.Delay(delay);
+
+                    //t5
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111100011", HLT.t5);
+                    await Task.Delay(delay);
+
+                    //t6
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111100011", HLT.t6);
+                    await Task.Delay(delay);
+
                     break;
                 }
             }
+
+            //reset registers
+            COUNTER = 0;
+            MAR = 0;
+            ROM_DATA = "";
+            IR = "";
+            ACC = 0;
+            BREG = 0;
+            OUT1 = 0;
+            CONTROLLER = 5;
+            frame.enableControlButtons();
         }
-        private string read()
+
+        public async void jog(MainFrame frame)
         {
-            string BIN_DATA = "";
-            OpenFileDialog open_file = new OpenFileDialog();
-            open_file.Title = "SAPtic Tank - Open File";
-            open_file.Filter = "SAP1 Files (*.bin)|*.bin";
-
-            DialogResult result = open_file.ShowDialog();
-            if (result == DialogResult.OK)
+            jogTimeSlot++;
+            if (jogTimeSlot == 1)
             {
-                string file = open_file.FileName;
+                //t1
+                MAR = COUNTER;
+                frame.update(1, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "010111100011", LDA.t1);
+            }  
+            else if(jogTimeSlot == 2)
+            {
+                //t2
+                COUNTER++;
+                frame.update(2, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "101111100011", LDA.t2);
+            }
+            else if(jogTimeSlot == 3)
+            {
+                ROM_DATA = ROM[MAR].Substring(5, 8);
+                IR = ROM_DATA;
+                frame.update(3, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001001100011", LDA.t3);
 
-                try
-                {
-                    BIN_DATA = File.ReadAllText(file);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                    MessageBox.Show("Cannot open File 😐");
-                }
+                //t4
+                UPPER_NIBBLE = IR.Substring(0, 4);
+                LOWER_NIBBLE = IR.Substring(4, 4);
+                CONTROLLER = Convert.ToInt32(UPPER_NIBBLE, 2);
+                MAR = Convert.ToInt32(LOWER_NIBBLE, 2);
             }
 
-            return BIN_DATA;
-        }
-    }
 
-        class Command
+            if(CONTROLLER == 0)
+            {
+                if (jogTimeSlot == 4)
+                {
+
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "000110100011", LDA.t4);
+                }
+                else if (jogTimeSlot == 5)
+                {
+                    ROM_DATA = ROM[MAR].Substring(5, 8);
+                    ACC = Convert.ToInt32(ROM_DATA, 2);
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011000011", LDA.t5);
+                }
+                else if (jogTimeSlot == 6)
+                {
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011000011", LDA.t6);
+                    jogTimeSlot = 0;
+                }
+            }
+            else if(CONTROLLER == 1)
+            {
+                if (jogTimeSlot == 4)
+                {
+                    //t4
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "000110100011", ADD.t4);
+                }
+                else if (jogTimeSlot == 5)
+                {
+                    ROM_DATA = ROM[MAR].Substring(5, 8);
+                    BREG = Convert.ToInt32(ROM[MAR].Substring(5, 8), 2);
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011100001", ADD.t5);
+                }
+                else if (jogTimeSlot == 6)
+                {
+                    AS = ACC + BREG;
+                    ACC = AS;
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111000111", ADD.t6);
+                    jogTimeSlot = 0;
+                }
+            }
+            else if(CONTROLLER == 2)
+            {
+                if (jogTimeSlot == 4)
+                {
+                    //t4
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "000110100011", SUB.t4);
+                }
+                else if (jogTimeSlot == 5)
+                {
+                    ROM_DATA = ROM[MAR].Substring(5, 8);
+                    BREG = Convert.ToInt32(ROM[MAR].Substring(5, 8), 2);
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001011100001", SUB.t5);
+                }
+                else if (jogTimeSlot == 6)
+                {
+                    AS = ACC - BREG;
+                    ACC = AS;
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111001111", SUB.t6);
+                    jogTimeSlot = 0;
+                }
+            }
+            else if(CONTROLLER == 14)
+            {
+                if (jogTimeSlot == 4)
+                {
+                    //OUT
+                    OUT1 = ACC;
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111110010", OUT.t4);
+                }
+                else if (jogTimeSlot == 5)
+                {
+                    //t5
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111110010", OUT.t5);
+                }
+                else if (jogTimeSlot == 6)
+                {
+                    //t6
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111110010", OUT.t5);
+                    jogTimeSlot = 0;
+                }
+            }
+            else if(CONTROLLER == 15)
+            {
+                if (jogTimeSlot == 4)
+                {
+                    //t4
+                    frame.update(4, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111100011", HLT.t4);
+                }
+                else if (jogTimeSlot == 5)
+                {
+                    //t5
+                    frame.update(5, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111100011", HLT.t5);
+                }
+                else if (jogTimeSlot == 6)
+                {
+                    //t6
+                    frame.update(6, COUNTER, MAR, CONTROLLER, ACC, BREG, OUT1, "001111100011", HLT.t6);
+                    //reset registers
+                    jogTimeSlot = 0;
+                    COUNTER = 0;
+                    MAR = 0;
+                    ROM_DATA = "";
+                    IR = "";
+                    ACC = 0;
+                    BREG = 0;
+                    OUT1 = 0;
+                    CONTROLLER = 5;
+                    frame.disableJog();
+                    await Task.Delay(3000);
+                    frame.enableControlButtons();
+                }
+
+                
+            }
+                        
+            
+            }
+        }
+
+    class Command
     {
-        public Timeslot t1 = new Timeslot();
-        public Timeslot t2 = new Timeslot();
-        public Timeslot t3 = new Timeslot();
-        public Timeslot t4 = new Timeslot();
-        public Timeslot t5 = new Timeslot();
-        public Timeslot t6 = new Timeslot();
+        public Image t1;
+        public Image t2;
+        public Image t3;
+        public Image t4;
+        public Image t5;
+        public Image t6;
     }
-        class Timeslot
-    {
-        public Image image;
-        
-    }
+    
 }

@@ -35,6 +35,13 @@
   <PropertyGroup>
     <StartupObject>SAPtic_Tank.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MaterialSkin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialSkin.0.2.1\lib\MaterialSkin.dll</HintPath>
@@ -76,17 +83,12 @@
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
     <Compile Include="Assembler.cs" />
-    <Compile Include="AssemblerForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="AssemblerForm.Designer.cs">
-      <DependentUpon>AssemblerForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Emulator.cs" />
+    <Compile Include="File.cs" />
     <Compile Include="Glossary.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Glossary.Designer.cs">
+    <Compile Include="Glossary.designer.cs">
       <DependentUpon>Glossary.cs</DependentUpon>
     </Compile>
     <Compile Include="MainFrame.cs">
@@ -97,6 +99,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SAP1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,9 +113,6 @@
     <EmbeddedResource Include="About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="AssemblerForm.resx">
-      <DependentUpon>AssemblerForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Glossary.resx">
       <DependentUpon>Glossary.cs</DependentUpon>
     </EmbeddedResource>
@@ -117,14 +121,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="SAP1.resx">
       <DependentUpon>SAP1.cs</DependentUpon>
     </EmbeddedResource>
@@ -144,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MetroFramework.txt" />
+    <None Include="Resources\off1.png" />
+    <None Include="Resources\on1.png" />
+    <Content Include="Resources\icon.ico" />
     <Content Include="Resources\state1.jpg" />
     <Content Include="Resources\state2.jpg" />
     <Content Include="Resources\state3.jpg" />
@@ -154,7 +156,7 @@
     <Content Include="Resources\state5ADDSUB.jpg" />
     <Content Include="Resources\state5LDA.jpg" />
     <Content Include="Resources\state6ADDSUB.jpg" />
-    <None Include="Resources\wpid-wp-14240517395271.jpeg" />
+    <Content Include="Resources\wpid-wp-14240517395271.jpeg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

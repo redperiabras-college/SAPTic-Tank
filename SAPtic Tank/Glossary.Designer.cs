@@ -28,20 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox1 = new System.Windows.Forms.ListBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Glossary));
+            this.terms = new System.Windows.Forms.ListBox();
+            this.definition = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
-            // listBox1
+            // terms
             // 
-            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.listBox1.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 20;
-            this.listBox1.Items.AddRange(new object[] {
+            this.terms.Font = new System.Drawing.Font("Segoe UI Light", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.terms.FormattingEnabled = true;
+            this.terms.ItemHeight = 21;
+            this.terms.Items.AddRange(new object[] {
             "Accumulator",
-            "Accumulator",
-            "ADD",
             "Adder/Subtractor",
             "B Register",
             "Binary Display",
@@ -52,42 +50,42 @@
             "Output Register",
             "Program Counter",
             "RAM"});
-            this.listBox1.Location = new System.Drawing.Point(38, 64);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(143, 300);
-            this.listBox1.TabIndex = 0;
+            this.terms.Location = new System.Drawing.Point(30, 75);
+            this.terms.Name = "terms";
+            this.terms.Size = new System.Drawing.Size(153, 298);
+            this.terms.TabIndex = 0;
+            this.terms.SelectedIndexChanged += new System.EventHandler(this.terms_SelectedIndexChanged);
             // 
-            // textBox1
+            // definition
             // 
-            this.textBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Font = new System.Drawing.Font("Segoe UI Light", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(203, 64);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(184, 324);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.Text = "Accumulator";
+            this.definition.Font = new System.Drawing.Font("Segoe UI Semilight", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.definition.Location = new System.Drawing.Point(189, 75);
+            this.definition.Name = "definition";
+            this.definition.Size = new System.Drawing.Size(161, 303);
+            this.definition.TabIndex = 1;
+            this.definition.Text = "";
             // 
             // Glossary
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(411, 451);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.listBox1);
+            this.ClientSize = new System.Drawing.Size(382, 410);
+            this.Controls.Add(this.definition);
+            this.Controls.Add(this.terms);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimizeBox = false;
             this.Name = "Glossary";
+            this.Resizable = false;
             this.Style = MetroFramework.MetroColorStyle.Silver;
             this.Text = "Glossary";
             this.Load += new System.EventHandler(this.Glossary_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListBox listBox1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ListBox terms;
+        private System.Windows.Forms.RichTextBox definition;
     }
 }

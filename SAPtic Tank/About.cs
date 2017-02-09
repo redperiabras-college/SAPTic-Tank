@@ -32,5 +32,10 @@ namespace SAPtic_Tank
         {
 
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
